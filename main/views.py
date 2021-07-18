@@ -58,12 +58,12 @@ def sendEmail(request,id):
         #fail_silently=False,
     #)
 
-    account_sid = "AC6d825427b72ebe774ee805eed6006e59"
-    auth_token = "5234de2573aad6bbc175677d5a8cec81"
+    account_sid = "##ENTER SID##"
+    auth_token = "##ENTER AUTH TOKEN##"
 
     client = Client(account_sid, auth_token)
 
-    client.messages.create(from_="+15207292984",
+    client.messages.create(from_="##ENTER TWILIO PHONE NUMBER##",
                        to=str(Beneficiary.phone_number),
                        body='You just sent an SMS from Python using Twilio! https://accounts.google.com/')
 
