@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}"></link>
+</head>    
+<body>
+    <main class="container">
+        <form class="my-4" action="/">
+            <div class="input-group mb-3">
+                <input type="text" name="q" class="form-control form-control-lg" placeholder="Search" />
+                <button class="btn btn-dark btn-lg" type="submit" id="button-addon2">Search</button>
+            </div>
+        </form>
+        <h3 class="my-3">Beneficiary List <a href="/add-beneficiary" class="float-end btn btn-sm btn-success mt-2">Add Beneficiary</a></h3>
+        <table class="table table-bordered">
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Phone Number</th>
+                <th>Date of Birth</th>
+                <th>Age</th>
+                <th>Address</th>
+                <th>Adhar Number</th>
+                <th>PAN Number</th>
+                <th>Gender</th>
+                <th>Date of Registration</th>
+                <th>Validity Status</th>
+                <th>Next Renewal Date</th>
+                <th>Message Sent</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+            {% if data%}
+                {% for beneficiary in data %}
+                     <tr>
+                         <td>{{beneficiary.id}}</td>
+                         <td>{{beneficiary.full_name}}</td>
+                         <td>{{beneficiary.phone_number}}</td>
+                         <td>{{beneficiary.date_of_birth}}</td>
+                         <td>{{beneficiary.age}}</td>
+                         <td>{{beneficiary.address}}</td>
+                         <td>{{beneficiary.adhar_number}}</td>
+                         <td>{{beneficiary.pan_number}}</td>
+                         <td>{{beneficiary.gender}}</td>
+                         <td>{{beneficiary.date_of_registration}}</td>
+                         <td>{{beneficiary.validity_status}}</td>
+                         <td>{{beneficiary.next_renewal_date}}</td>
+                         <td>{{beneficiary.message_sent}}</td>
+                         <td>{{beneficiary.email}}</td>
+                        <td>
+                            <a href="/update-beneficiary/{{beneficiary.id}}" class="btn btn-info btn-sm mt-2">Modify</a>
+                            <a onclick="return confirm('Are you sure you want to delete this data?')" href="/delete-beneficiary/{{beneficiary.id}}" class="btn btn-danger btm-sm mt-2">Delete</a>
+                            <form method="post" action="/send-email/{{beneficiary.id}}">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-primary mt-2" value="Remind" />
+                            </form>
+                        </td>
+                        </tr>
+                     {% endfor %}
+            {% endif %}
+        </table>
+        <!-- Pagination -->
+        <nav aria-label="...">
+            <ul class="pagination">
+                {% if data.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{data.previous_page_number}}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                {% endif %}
+                {% for i in data.paginator.page_range %}
+                    {% if data.number == i %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">{{i}}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if data.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{data.next_page_number}}" tabindex="-1" aria-disabled="true">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </main>
+</body>    
+</html>
